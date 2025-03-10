@@ -20,8 +20,11 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
 
         // 监听配置变更
         vscode.workspace.onDidChangeConfiguration(e => {
+            // 检查是否影响了我们的配置
             if (e.affectsConfiguration('cursorLoooooongContext')) {
-                this.refresh();
+                console.log('Configuration changed, refreshing view');
+                // 配置变更时刷新视图，但不重置选择状态
+                this.refresh(false);
             }
         });
 
@@ -66,9 +69,21 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
         });
     }
 
-    refresh(): void {
+    refresh(resetSelection: boolean = false): void {
+        // 清除文件缓存，强制重新加载文件树
         this.fileItemCache.clear();
+        
+        // 如果需要重置选择状态
+        if (resetSelection) {
+            // 清除所有选中状态
+            this.selectedItems.clear();
+        }
+        
+        // 触发树视图刷新
         this._onDidChangeTreeData.fire();
+        
+        // 打印日志，便于确认刷新执行
+        console.log('Tree view refreshed. Selection reset:', resetSelection);
     }
 
     getTreeItem(element: FileItem): vscode.TreeItem {

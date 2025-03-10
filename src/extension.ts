@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.commands.executeCommand('filesExporterView.focus');
         }),
         vscode.commands.registerCommand('filesExporter.refreshEntry', () => 
-            filesExplorerProvider.refresh()
+            filesExplorerProvider.refresh(true)
         ),
         vscode.commands.registerCommand('filesExporter.toggleSelection', (item) => 
             filesExplorerProvider.toggleSelection(item)
