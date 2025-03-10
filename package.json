@@ -36,6 +36,16 @@
         "command": "filesExporter.exportSelected",
         "title": "Export Selected Files for Cursor",
         "icon": "$(export)"
+      },
+      {
+        "command": "filesExporter.refreshEntry",
+        "title": "Refresh File List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "filesExporter.openSettings",
+        "title": "Open Settings",
+        "icon": "$(gear)"
       }
     ],
     "views": {
@@ -52,8 +62,80 @@
           "command": "filesExporter.exportSelected",
           "when": "view == filesExporterView",
           "group": "navigation"
+        },
+        {
+          "command": "filesExporter.refreshEntry",
+          "when": "view == filesExporterView",
+          "group": "navigation"
+        },
+        {
+          "command": "filesExporter.openSettings",
+          "when": "view == filesExporterView",
+          "group": "navigation@9"
         }
       ]
+    },
+    "configuration": {
+      "title": "Cursor Loooooong Context",
+      "properties": {
+        "cursorLoooooongContext.excludePatterns": {
+          "type": "array",
+          "default": [
+            "node_modules",
+            ".git",
+            "out",
+            "dist",
+            ".vscode",
+            "build",
+            "bin",
+            "obj"
+          ],
+          "description": "文件夹排除模式，这些文件夹将不会显示在文件选择器中"
+        },
+        "cursorLoooooongContext.includeFileExtensions": {
+          "type": "array",
+          "default": [
+            ".js",
+            ".ts",
+            ".jsx",
+            ".tsx",
+            ".html",
+            ".css",
+            ".scss",
+            ".less",
+            ".json",
+            ".md",
+            ".py",
+            ".java",
+            ".c",
+            ".cpp",
+            ".cs",
+            ".go",
+            ".php",
+            ".rb",
+            ".rs",
+            ".swift",
+            ".kt",
+            ".dart"
+          ],
+          "description": "要包含的文件扩展名。如果为空，则包含所有文件。扩展名需要包含点，例如 '.js'"
+        },
+        "cursorLoooooongContext.showOnlyIncludedExtensions": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否只显示包含的文件扩展名。如果为true，则只显示includeFileExtensions中指定的文件类型"
+        },
+        "cursorLoooooongContext.rootPath": {
+          "type": "string",
+          "default": "",
+          "description": "设置要显示的根路径，为空则显示整个工作区，例如 'src/'仅显示src目录下的内容"
+        },
+        "cursorLoooooongContext.expandAll": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否默认展开所有目录，默认不展开"
+        }
+      }
     }
   },
   "scripts": {

@@ -18,7 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
         ),
         vscode.commands.registerCommand('filesExporter.exportSelected', () => 
             filesExplorerProvider.exportSelected()
-        )
+        ),
+        vscode.commands.registerCommand('filesExporter.openSettings', () => {
+            vscode.commands.executeCommand('workbench.action.openSettings', 'cursorLoooooongContext');
+        })
     );
 }
 

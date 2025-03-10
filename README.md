@@ -2,26 +2,27 @@
 
 *[中文README](./README_zh.md)*
 
-A specialized VSCode extension designed to **break through the context limitations of Cursor IDE**. By exporting selected project files in a structured, optimized format, it enables AI-powered development without the constraints of context window size.
+A specialized VSCode extension designed to **break through the context limitations of Cursor IDE**. This extension solves a critical problem: Cursor often fails to send complete context when you @mention files, forcing you to waste precious Agent mode requests on read_file operations and "continue" prompts. With this extension, you can send AI-friendly context in one go, bypassing Cursor's built-in limitations!
 
-## 🚨 Why This Extension Is Essential For Cursor Users
+## 🚨 Why This Extension Is CRITICAL For Cursor Users
 
-### The Problem: Cursor's Context Limitation
+### The PAINFUL Reality: Cursor's Hidden Context Limitation
 
-Cursor IDE, while powerful, has a fundamental limitation: **its context window can only handle a limited amount of code**. When working with:
-- Large projects
-- Complex codebases 
-- Multiple interdependent files
+Cursor IDE has a **devastating limitation** that's costing you time and money: **When you @mention files, Cursor doesn't actually send the complete context to save on their API costs!** This leads to:
 
-...you've likely encountered the frustrating "Context window full" message, or received incomplete assistance because your AI assistant lacks crucial context about your code.
+- **Wasted Agent Requests**: Your precious 25 daily Agent requests get consumed by read_file operations
+- **Frustrating Workflows**: You're forced to waste another request just to say "continue" to get the AI back on track
+- **Lost Productivity**: Constant context switching as you wait for the AI to gather information it should have had from the start
+- **Incomplete Assistance**: The AI lacks crucial context about your code, leading to subpar solutions
 
-### The Solution: Loooooong Context
+### The Liberating Solution: Loooooong Context
 
-This extension allows you to **deliberately select the most relevant files** for your current task and export them in a perfectly formatted prompt that:
+This extension **frees you from Cursor's artificial limitations** by allowing you to:
 
-1. **Preserves directory structure** - So the AI understands the relationships between files
-2. **Formats code with language markers** - For proper syntax highlighting and language understanding
-3. **Creates an optimized catalog** - Giving the AI a mental map of your project structure
+1. **Take Control of Your Context**: Deliberately select exactly which files matter for your current task
+2. **Send Complete Context in One Go**: No more waiting for multiple read_file operations
+3. **Preserve Project Structure**: The AI understands the relationships between files instantly
+4. **Save Your Precious Agent Requests**: Use them for actual problem-solving, not just gathering context
 
 ## Features
 
@@ -107,6 +108,7 @@ import React from 'react';
 
 ## Pro Tips for Cursor Users
 
+- **Stop Wasting Agent Requests**: Use this extension to provide complete context upfront
 - **Select Strategically**: Include only the files directly relevant to your current task
 - **Include Interface Files**: Always include files that define interfaces/types used by your working files
 - **Export Before Complex Tasks**: Generate a fresh context export before asking the AI to implement complex features
