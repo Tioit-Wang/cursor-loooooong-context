@@ -101,7 +101,7 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
             return this.getFileItems(filePath);
         } else {
             // 读取根路径配置
-            const config = vscode.workspace.getConfiguration('cursorLoooooongContext');
+            const config = vscode.workspace.getConfiguration('cursorLoooooongContext', null);
             const rootPath = config.get<string>('rootPath') || '';
             
             if (rootPath.trim() === '') {
@@ -154,7 +154,7 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
                 const isSelected = this.selectedItems.has(filePath);
 
                 // 读取是否默认展开所有目录的配置
-                const config = vscode.workspace.getConfiguration('cursorLoooooongContext');
+                const config = vscode.workspace.getConfiguration('cursorLoooooongContext', this.workspaceRoot ? vscode.Uri.file(this.workspaceRoot) : null);
                 const expandAll = config.get<boolean>('expandAll') || false;
                 
                 // 根据配置决定目录的展开状态
@@ -192,7 +192,7 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
     }
 
     private shouldExclude(fileName: string, filePath: string, isDirectory: boolean): boolean {
-        const config = vscode.workspace.getConfiguration('cursorLoooooongContext');
+        const config = vscode.workspace.getConfiguration('cursorLoooooongContext', this.workspaceRoot ? vscode.Uri.file(this.workspaceRoot) : null);
         
         // 检查排除模式
         const excludePatterns: string[] = config.get('excludePatterns') || [
@@ -445,8 +445,8 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
                 return;
             }
             
-            // 不再将目录本身添加到selectedItems中，只添加文件
-            // this.selectedItems.add(dirPath);
+            // 将目录本身添加到selectedItems中，使checkbox状态与实际选择状态一致
+            this.selectedItems.add(dirPath);
 
             const files = fs.readdirSync(dirPath);
             for (const file of files) {

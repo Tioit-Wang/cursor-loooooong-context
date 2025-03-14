@@ -128,7 +128,8 @@
         "cursorLoooooongContext.rootPath": {
           "type": "string",
           "default": "",
-          "description": "设置要显示的根路径，为空则显示整个工作区，例如 'src/'仅显示src目录下的内容"
+          "description": "设置要显示的根路径，为空则显示整个工作区，例如 'src/'仅显示src目录下的内容",
+          "scope": "resource"
         },
         "cursorLoooooongContext.expandAll": {
           "type": "boolean",
