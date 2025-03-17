@@ -19,7 +19,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:filesExporter.showExportView"
+    "onCommand:filesExporter.showExportView",
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -52,7 +53,8 @@
       "explorer": [
         {
           "id": "filesExporterView",
-          "name": "Files for Cursor Context"
+          "name": "Files for Cursor Context",
+          "when": "true"
         }
       ]
     },

@@ -5,7 +5,6 @@ export function activate(context: vscode.ExtensionContext) {
     const filesExplorerProvider = new FilesExplorerProvider(vscode.workspace.rootPath || '');
     
     context.subscriptions.push(
-        vscode.window.registerTreeDataProvider('filesExporterView', filesExplorerProvider),
         vscode.commands.registerCommand('filesExporter.showExportView', () => {
             vscode.commands.executeCommand('workbench.view.explorer');
             vscode.commands.executeCommand('filesExporterView.focus');
@@ -23,6 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.commands.executeCommand('workbench.action.openSettings', 'cursorLoooooongContext');
         })
     );
+    
+    context.subscriptions.push(filesExplorerProvider.getTreeView());
 }
 
 export function deactivate() {} 
