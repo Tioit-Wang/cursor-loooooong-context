@@ -78,7 +78,7 @@ import React from 'react';
 ## 安装方法
 
 ### 从VSIX文件安装
-1. 从[发布页面](https://github.com/Tioit-Wang/cursor-loooooong-context/releases)下载`cursor-loooooong-context-0.1.0.vsix`文件
+1. 从[发布页面](https://github.com/Tioit-Wang/cursor-loooooong-context/releases)下载`cursor-loooooong-context-1.0.0.vsix`文件
 2. 打开VSCode
 3. 按下`Ctrl+Shift+X`打开扩展视图
 4. 点击视图顶部的"..."菜单
@@ -147,15 +147,21 @@ import React from 'react';
 3. 搜索 "Cursor Loooooong Context"
 4. 找到 "Root Paths" 设置并添加你想要的目录
 
-#### 首次打开工作区的引导
-
-当你首次在新的工作区中打开插件时，会显示一个引导对话框，帮助你配置根目录。你可以选择配置根目录或跳过。
-
 ## 已知问题
 
 目前没有已知问题。
 
 ## 发行说明
+
+详细的发行说明请查看 [CHANGELOG.md](./CHANGELOG.md) 文件。
+
+### 1.0.0
+
+- 🚀 第一个稳定版本
+- ✨ 增强的文件过滤系统，支持正则表达式
+- 🔍 改进的文件夹结构显示
+- 📋 自动复制到剪贴板
+- 🚫 扩展的默认排除模式
 
 ### 0.1.0
 

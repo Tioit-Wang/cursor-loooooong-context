@@ -78,7 +78,7 @@ import React from 'react';
 ## Installation
 
 ### From VSIX File
-1. Download the `cursor-loooooong-context-0.1.0.vsix` file from the [releases page](https://github.com/Tioit-Wang/cursor-loooooong-context/releases)
+1. Download the `cursor-loooooong-context-1.0.0.vsix` file from the [releases page](https://github.com/Tioit-Wang/cursor-loooooong-context/releases)
 2. Open VSCode
 3. Press `Ctrl+Shift+X` to open the Extensions view
 4. Click the "..." menu at the top of the view
@@ -152,6 +152,16 @@ Alternatively, you can configure the root directories in the settings:
 None at this time.
 
 ## Release Notes
+
+For detailed release notes, please see the [CHANGELOG.md](./CHANGELOG.md) file.
+
+### 1.0.0
+
+- 🚀 First stable release
+- ✨ Enhanced file filtering with regex support
+- 🔍 Improved folder structure display
+- 📋 Automatic clipboard copy
+- 🚫 Extended default exclusion patterns
 
 ### 0.1.0
 
