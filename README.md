@@ -34,12 +34,15 @@ This extension **frees you from Cursor's artificial limitations** by allowing yo
 
 ## Usage
 
+1. Click on the Cursor Context icon in the activity bar (left sidebar)
+2. The "Files for Context Export" view will appear
+3. Use the checkboxes to select the relevant files for your current task
+4. Click the export button (📤) at the top of the view
+5. The exported content will open in a new editor tab - ready to copy and paste into Cursor's AI chat
+
+Alternatively, you can:
 1. Open the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS)
 2. Type and select "Show Files for Cursor Context Export"
-3. In the explorer view, a new section called "Files for Cursor Context" will appear
-4. Use the checkboxes to select the relevant files for your current task
-5. Click the export button (📤) at the top of the view
-6. The exported content will open in a new editor tab - ready to copy and paste into Cursor's AI chat
 
 ## Export Format
 
@@ -121,10 +124,28 @@ import React from 'react';
 
 ## Coming Soon
 
-- Customizable exclusion patterns
 - Max file size limit warnings
 - Export format templates
 - Context size estimation
+
+## New Features
+
+### Multiple Root Directories Support
+
+The extension now supports configuring multiple root directories for your workspace. This is useful when you want to include files from different directories in your context, such as both `src/` and `test/` directories.
+
+#### How to Configure Multiple Root Directories
+
+1. Click the folder icon in the "Files for Context Export" view in the Cursor Context sidebar
+2. Select the directories you want to include (you can select multiple)
+3. Click OK to save your configuration
+
+Alternatively, you can configure the root directories in the settings:
+
+1. Open the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS)
+2. Type and select "Preferences: Open Settings (UI)"
+3. Search for "Cursor Loooooong Context"
+4. Find the "Root Paths" setting and add your desired directories
 
 ## Known Issues
 
@@ -137,4 +158,4 @@ None at this time.
 - Initial release
 - File selection with checkboxes
 - Directory structure generation
-- Markdown syntax highlighting in exported code 
+- Markdown syntax highlighting in exported code

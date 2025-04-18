@@ -19,11 +19,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:filesExporter.showExportView",
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cursorContextExplorer",
+          "title": "Cursor Context",
+          "icon": "resources/cursor-context.svg"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "filesExporter.showExportView",
@@ -47,17 +55,31 @@
         "command": "filesExporter.openSettings",
         "title": "Open Settings",
         "icon": "$(gear)"
+      },
+      {
+        "command": "filesExporter.configureExcludePatterns",
+        "title": "配置排除路径",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "filesExporter.refreshAfterConfiguration",
+        "title": "配置后刷新视图"
+      },
+      {
+        "command": "filesExporter.skipConfiguration",
+        "title": "跳过配置",
+        "icon": "$(info)"
       }
     ],
     "views": {
-      "explorer": [
+      "cursorContextExplorer": [
         {
           "id": "filesExporterView",
-          "name": "Files for Cursor Context",
-          "when": "true"
+          "name": "Cursor Context"
         }
       ]
     },
+
     "menus": {
       "view/title": [
         {
@@ -74,6 +96,11 @@
           "command": "filesExporter.openSettings",
           "when": "view == filesExporterView",
           "group": "navigation@9"
+        },
+        {
+          "command": "filesExporter.configureExcludePatterns",
+          "when": "view == filesExporterView",
+          "group": "navigation@8"
         }
       ]
     },
@@ -90,9 +117,45 @@
             ".vscode",
             "build",
             "bin",
-            "obj"
+            "obj",
+            ".venv",
+            "__pycache__",
+            ".mypy_cache",
+            ".pytest_cache",
+            ".idea",
+            ".vs",
+            ".github",
+            ".next",
+            ".nuxt",
+            "coverage",
+            "target"
           ],
-          "description": "文件夹排除模式，这些文件夹将不会显示在文件选择器中"
+          "description": "文件夹排除模式，这些文件夹将不会显示在文件选择器中。支持精确匹配文件夹名称。"
+        },
+        "cursorLoooooongContext.excludeRegexPatterns": {
+          "type": "array",
+          "default": [
+            "\\.venv.*",
+            ".*\\.pyc$",
+            ".*\\.class$",
+            ".*\\.o$",
+            ".*\\.obj$",
+            ".*\\.exe$",
+            ".*\\.dll$",
+            ".*\\.so$",
+            ".*\\.dylib$",
+            ".*\\.pyd$",
+            ".*\\.pyo$",
+            ".*\\.rbc$",
+            ".*\\.swp$",
+            ".*~$",
+            ".*\\.bak$",
+            ".*\\.tmp$",
+            ".*\\.cache$",
+            ".*\\.log$",
+            ".*\\.DS_Store$"
+          ],
+          "description": "正则表达式排除模式，匹配这些模式的文件或文件夹将不会显示在文件选择器中。例如：'\\.*\\.pyc$' 将排除所有 .pyc 文件。"
         },
         "cursorLoooooongContext.includeFileExtensions": {
           "type": "array",
@@ -130,13 +193,29 @@
         "cursorLoooooongContext.rootPath": {
           "type": "string",
           "default": "",
-          "description": "设置要显示的根路径，为空则显示整个工作区，例如 'src/'仅显示src目录下的内容",
-          "scope": "resource"
+          "description": "设置要显示的根路径（已弃用，请使用excludePatterns和excludeRegexPatterns配置排除路径）",
+          "scope": "resource",
+          "deprecationMessage": "此配置项已弃用，请使用excludePatterns和excludeRegexPatterns配置排除路径"
+        },
+        "cursorLoooooongContext.rootPaths": {
+          "type": "array",
+          "default": [],
+          "description": "设置要显示的多个根路径（已弃用，请使用excludePatterns和excludeRegexPatterns配置排除路径）",
+          "scope": "resource",
+          "items": {
+            "type": "string"
+          },
+          "deprecationMessage": "此配置项已弃用，请使用excludePatterns和excludeRegexPatterns配置排除路径"
         },
         "cursorLoooooongContext.expandAll": {
           "type": "boolean",
           "default": false,
           "description": "是否默认展开所有目录，默认不展开"
+        },
+        "cursorLoooooongContext.configured": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否已经配置过工作区"
         }
       }
     }

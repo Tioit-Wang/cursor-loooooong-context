@@ -34,12 +34,15 @@ Cursor IDE有一个**令人沮丧的致命缺陷**，正在浪费你的时间和
 
 ## 使用方法
 
+1. 点击活动栏（左侧边栏）中的 Cursor Context 图标
+2. 将出现 "Files for Context Export" 视图
+3. 使用复选框选择与当前任务相关的文件
+4. 点击视图顶部的导出按钮 (📤)
+5. 导出的内容将在新的编辑器选项卡中打开 - 随时可以复制并粘贴到 Cursor 的 AI 聊天中
+
+或者，你也可以：
 1. 打开命令面板（Windows/Linux 上使用 `Ctrl+Shift+P`，macOS 上使用 `Cmd+Shift+P`）
 2. 输入并选择 "Show Files for Cursor Context Export"
-3. 在资源管理器视图中，将出现 "Files for Cursor Context" 新部分
-4. 使用复选框选择与当前任务相关的文件
-5. 点击视图顶部的导出按钮 (📤)
-6. 导出的内容将在新的编辑器选项卡中打开 - 随时可以复制并粘贴到 Cursor 的 AI 聊天中
 
 ## 导出格式
 
@@ -121,10 +124,32 @@ import React from 'react';
 
 ## 即将推出
 
-- 可自定义排除模式
 - 最大文件大小警告
 - 导出格式模板
 - 上下文大小估算
+
+## 新功能
+
+### 多根目录支持
+
+插件现在支持为工作区配置多个根目录。当你想要在上下文中包含来自不同目录的文件时，这非常有用，例如同时包含 `src/` 和 `test/` 目录。
+
+#### 如何配置多个根目录
+
+1. 点击 Cursor Context 侧边栏中“Files for Context Export”视图中的文件夹图标
+2. 选择你想要包含的目录（可以选择多个）
+3. 点击OK保存你的配置
+
+或者，你可以在设置中配置根目录：
+
+1. 打开命令面板（Windows/Linux 上使用 `Ctrl+Shift+P`，macOS 上使用 `Cmd+Shift+P`）
+2. 输入并选择 "Preferences: Open Settings (UI)"
+3. 搜索 "Cursor Loooooong Context"
+4. 找到 "Root Paths" 设置并添加你想要的目录
+
+#### 首次打开工作区的引导
+
+当你首次在新的工作区中打开插件时，会显示一个引导对话框，帮助你配置根目录。你可以选择配置根目录或跳过。
 
 ## 已知问题
 
@@ -137,4 +162,4 @@ import React from 'react';
 - 首次发布
 - 带复选框的文件选择
 - 目录结构生成
-- 导出代码中的 Markdown 语法高亮 
+- 导出代码中的 Markdown 语法高亮

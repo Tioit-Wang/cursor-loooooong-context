@@ -9,38 +9,13 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
     private selectedItems: Set<string> = new Set();
     private selectedFiles: Set<string> = new Set();
     private fileItemCache: Map<string, FileItem> = new Map();
-    private treeView: vscode.TreeView<FileItem>;
 
-    // 类级别防抖器
-    private refreshDebouncer: DebounceHelper = new DebounceHelper(100);
+    // 类级别防抖器 - 注释掉未使用的变量
+    // private refreshDebouncer: DebounceHelper = new DebounceHelper(100);
 
     constructor(private workspaceRoot: string) {
-        // 创建TreeView（明确禁用复选框）
-        this.treeView = vscode.window.createTreeView('filesExporterView', {
-            treeDataProvider: this,
-            showCheckboxes: false, // 明确禁用复选框显示
-            manageCheckboxStateManually: false, // 不手动管理复选框状态
-            canSelectMany: false, // 禁用多选
-        } as vscode.TreeViewOptions<FileItem>);
-
-        console.log('TreeView created with enhanced icons, checkboxes disabled');
-
-        // 监听树视图中的选择事件
-        this.treeView.onDidChangeSelection(e => {
-            console.log('TreeView selection changed:', e.selection.length > 0
-                ? e.selection.map(item => item.label || 'unknown')
-                : 'No selection');
-        });
-
-        // 监听可见性变化事件
-        this.treeView.onDidChangeVisibility(e => {
-            console.log('TreeView visibility changed:', e.visible ? 'visible' : 'hidden');
-
-            // 当TreeView变为可见时，刷新视图
-            if (e.visible) {
-                this.refresh(false);
-            }
-        });
+        // 不再创建TreeView，因为在extension.ts中已经创建了
+        console.log('FilesExplorerProvider initialized');
 
         // 监听配置变更
         vscode.workspace.onDidChangeConfiguration(e => {
@@ -53,11 +28,9 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
         });
     }
 
-    // 提供TreeView实例给extension.ts使用
-    getTreeView(): vscode.TreeView<FileItem> {
-        return this.treeView;
-    }
+    // 不需要提供TreeView实例，因为在extension.ts中直接创建了TreeView
 
+    // 公开的refresh方法，可以从外部调用
     refresh(resetSelection: boolean = false): void {
         // 保存当前选择状态的副本
         const selectedItemsCopy = resetSelection ? new Set<string>() : new Set(this.selectedItems);
@@ -116,25 +89,9 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
             const filePath = element.resourceUri.fsPath;
             return this.getFileItems(filePath);
         } else {
-            // 读取根路径配置
-            const config = vscode.workspace.getConfiguration('cursorLoooooongContext', null);
-            const rootPath = config.get<string>('rootPath') || '';
-
-            if (rootPath.trim() === '') {
-                // 如果根路径为空，则显示整个工作区
-                return this.getFileItems(this.workspaceRoot);
-            } else {
-                // 否则只显示指定根路径下的内容
-                const fullRootPath = path.join(this.workspaceRoot, rootPath.replace(/\//g, path.sep));
-
-                // 检查路径是否存在
-                if (!fs.existsSync(fullRootPath)) {
-                    vscode.window.showWarningMessage(`指定的根路径 "${rootPath}" 不存在`);
-                    return Promise.resolve([]);
-                }
-
-                return this.getFileItems(fullRootPath);
-            }
+            // 直接显示整个工作区，使用排除模式过滤
+            const items = await this.getFileItems(this.workspaceRoot);
+            return items;
         }
     }
 
@@ -145,6 +102,8 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
 
         const files = fs.readdirSync(folderPath);
         const fileItems: FileItem[] = [];
+        const directoryItems: FileItem[] = [];
+        const regularFileItems: FileItem[] = [];
 
         for (const file of files) {
             const filePath = path.join(folderPath, file);
@@ -198,7 +157,12 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
                     arguments: [fileItem]
                 };
 
-                fileItems.push(fileItem);
+                // 根据类型分别添加到目录项或文件项
+                if (isDirectory) {
+                    directoryItems.push(fileItem);
+                } else {
+                    regularFileItems.push(fileItem);
+                }
             } catch (error: unknown) {
                 console.error(`Error processing file ${filePath}:`, error);
                 // 继续处理其他文件
@@ -206,22 +170,82 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
             }
         }
 
+        // 对目录项和文件项分别按名称排序
+        directoryItems.sort((a, b) => a.label.localeCompare(b.label));
+        regularFileItems.sort((a, b) => a.label.localeCompare(b.label));
+
+        // 先添加所有目录，再添加所有文件
+        // 这确保了目录始终显示在文件前面
+        fileItems.push(...directoryItems, ...regularFileItems);
+
         return fileItems;
     }
 
     private shouldExclude(fileName: string, filePath: string, isDirectory: boolean): boolean {
         const config = vscode.workspace.getConfiguration('cursorLoooooongContext', this.workspaceRoot ? vscode.Uri.file(this.workspaceRoot) : null);
 
-        // 检查排除模式
+        // 检查精确匹配排除模式
         const excludePatterns: string[] = config.get('excludePatterns') || [
             'node_modules',
             '.git',
             'out',
             'dist',
-            '.vscode'
+            '.vscode',
+            '.venv',
+            '__pycache__',
+            '.mypy_cache',
+            '.pytest_cache',
+            '.idea',
+            '.vs',
+            '.github',
+            '.next',
+            '.nuxt',
+            'coverage',
+            'target',
+            'build',
+            'bin',
+            'obj'
         ];
 
         if (excludePatterns.some(pattern => fileName === pattern)) {
+            return true;
+        }
+
+        // 检查正则表达式排除模式
+        const excludeRegexPatterns: string[] = config.get('excludeRegexPatterns') || [
+            '\\.venv.*',
+            '.*\\.pyc$',
+            '.*\\.class$',
+            '.*\\.o$',
+            '.*\\.obj$',
+            '.*\\.exe$',
+            '.*\\.dll$',
+            '.*\\.so$',
+            '.*\\.dylib$',
+            '.*\\.pyd$',
+            '.*\\.pyo$',
+            '.*\\.rbc$',
+            '.*\\.swp$',
+            '.*~$',
+            '.*\\.bak$',
+            '.*\\.tmp$',
+            '.*\\.cache$',
+            '.*\\.log$',
+            '.*\\.DS_Store$'
+        ];
+
+        // 使用相对路径进行正则匹配，这样可以匹配完整路径
+        const relativePath = path.relative(this.workspaceRoot, filePath);
+
+        if (excludeRegexPatterns.some(pattern => {
+            try {
+                const regex = new RegExp(pattern);
+                return regex.test(fileName) || regex.test(relativePath);
+            } catch (error) {
+                console.error(`Invalid regex pattern: ${pattern}`, error);
+                return false;
+            }
+        })) {
             return true;
         }
 
@@ -371,6 +395,8 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
             output += '// ! The content you need has already been copied to your clipboard, please paste it directly into your AI dialog\n';
             output += '// *********************\n\n';
 
+            output += '<xml version="1.0" encoding="UTF-8">\n';
+            output += '<context>\n';
             output += '<catalog>\n';
             output += this.generateCatalog();
             output += '</catalog>\n\n';
@@ -394,7 +420,13 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
                 }
             }
 
-            output += '</code_context>';
+            output += '</code_context>\n';
+            // 提供 一个填写需求的地方
+            output += '<user_input>\n';
+            output += '[请在这里填写你的需求, please fill in your requirements here]\n';
+            output += '</user_input>\n';
+            output += '</context>\n';
+            output += '</xml>\n';
 
             // 复制内容到剪贴板时不包含头部注释
             const clipboardContent = output.substring(output.indexOf('<catalog>'));
@@ -669,55 +701,6 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
         }
     }
 
-    // 无重置刷新方法 - 确保状态保持一致
-    private refreshWithoutReset(): void {
-        // 保存当前状态副本
-        const selectedItemsCopy = new Set(this.selectedItems);
-        const selectedFilesCopy = new Set(this.selectedFiles);
-
-        console.log('刷新前状态 - 选中项数:', this.selectedItems.size);
-
-        // 缓存当前展开的目录
-        const expandedItems = new Set<string>();
-        for (const [path, item] of this.fileItemCache.entries()) {
-            if (item.collapsibleState === vscode.TreeItemCollapsibleState.Expanded) {
-                expandedItems.add(path);
-            }
-        }
-
-        // 清除缓存
-        this.fileItemCache.clear();
-
-        // 触发刷新
-        this._onDidChangeTreeData.fire();
-
-        // 恢复状态
-        this.selectedItems = selectedItemsCopy;
-        this.selectedFiles = selectedFilesCopy;
-
-        // 延迟恢复展开状态
-        setTimeout(() => {
-            // 恢复展开状态
-            for (const [path, item] of this.fileItemCache.entries()) {
-                if (expandedItems.has(path) &&
-                    item.collapsibleState === vscode.TreeItemCollapsibleState.Collapsed) {
-                    try {
-                        this.treeView.reveal(item, { expand: true });
-                    } catch (e) {
-                        // 忽略可能的错误
-                    }
-                }
-            }
-        }, 10);
-    }
-
-    // 防抖执行刷新
-    private debouncedRefresh(resetSelection: boolean = false): void {
-        this.refreshDebouncer.debounce(() => {
-            this.refresh(resetSelection);
-        });
-    }
-
     // 重新实现getSelectedFilesCountInDirectory方法
     getSelectedFilesCountInDirectory(dirPath: string): number {
         let count = 0;
@@ -768,16 +751,16 @@ class FileItem extends vscode.TreeItem {
         private readonly provider?: FilesExplorerProvider
     ) {
         super(resourceUri, collapsibleState);
-        
+
         // 为选中项添加高亮效果
         if (isSelected) {
             this.label = `✔ ${this.label}`;
         }
-        
+
         this.tooltip = this.getTooltipText();
         this.description = this.getDescriptionText();
         this.iconPath = this.getIconPath();
-        
+
         // 为选中项添加高亮颜色
         if (isSelected) {
             this.resourceUri = this.resourceUri;
@@ -820,28 +803,3 @@ class FileItem extends vscode.TreeItem {
 
     contextValue = 'file';
 }
-
-// 防抖助手类
-class DebounceHelper {
-    private timeout: NodeJS.Timeout | null = null;
-
-    constructor(private delay: number) { }
-
-    debounce(callback: () => void): void {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-        }
-
-        this.timeout = setTimeout(() => {
-            this.timeout = null;
-            callback();
-        }, this.delay);
-    }
-
-    cancel(): void {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-            this.timeout = null;
-        }
-    }
-} 

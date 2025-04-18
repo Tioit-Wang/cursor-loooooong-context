@@ -12,14 +12,16 @@
 
 ## 使用方法
 
+1. 点击左侧边栏中的 Cursor Context 图标
+2. 在出现的“Files for Context Export”视图中勾选要导出的文件
+3. 点击导出按钮(📤)
+4. 导出的内容会在新的编辑器标签页中显示
+5. 复制导出的内容并粘贴到Cursor的AI聊天窗口中
+6. 现在AI助手有了完整的上下文信息，可以更精确地理解您的代码
+
+或者，你也可以：
 1. 按 `Ctrl+Shift+P` 打开命令面板
 2. 输入并选择 "Show Files for Cursor Context Export" 命令
-3. 在资源管理器视图中会出现"Files for Cursor Context"面板
-4. 勾选要导出的文件
-5. 点击导出按钮(📤)
-6. 导出的内容会在新的编辑器标签页中显示
-7. 复制导出的内容并粘贴到Cursor的AI聊天窗口中
-8. 现在AI助手有了完整的上下文信息，可以更精确地理解您的代码
 
 ## 为什么需要此扩展？
 
@@ -32,4 +34,4 @@ Cursor IDE虽然强大，但其上下文窗口有大小限制。在处理大型�
 1. 按 `Ctrl+Shift+X` 打开扩展视图
 2. 找到 "Cursor Loooooong Context" 扩展
 3. 点击"卸载"按钮
-4. 重启VSCode完成卸载 
+4. 重启VSCode完成卸载
