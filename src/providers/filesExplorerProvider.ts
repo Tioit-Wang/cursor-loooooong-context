@@ -10,6 +10,9 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
     private selectedFiles: Set<string> = new Set();
     private fileItemCache: Map<string, FileItem> = new Map();
 
+    // 用于直接控制展开状态，不依赖配置
+    private forceExpandAll: boolean | null = null;
+
     // 类级别防抖器 - 注释掉未使用的变量
     // private refreshDebouncer: DebounceHelper = new DebounceHelper(100);
 
@@ -129,11 +132,19 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
                 const isSelected = this.selectedItems.has(filePath);
                 console.log(`File item ${filePath}: isSelected=${isSelected}`);
 
-                // 读取是否默认展开所有目录的配置
-                const config = vscode.workspace.getConfiguration('cursorLoooooongContext', this.workspaceRoot ? vscode.Uri.file(this.workspaceRoot) : null);
-                const expandAll = config.get<boolean>('expandAll') || false;
+                // 决定目录的展开状态
+                let expandAll = false;
 
-                // 根据配置决定目录的展开状态
+                // 如果forceExpandAll不为null，则使用它的值
+                if (this.forceExpandAll !== null) {
+                    expandAll = this.forceExpandAll;
+                } else {
+                    // 否则读取配置
+                    const config = vscode.workspace.getConfiguration('cursorLoooooongContext', this.workspaceRoot ? vscode.Uri.file(this.workspaceRoot) : null);
+                    expandAll = config.get<boolean>('expandAll') || false;
+                }
+
+                // 根据展开状态决定目录的可折叠状态
                 const collapsibleState = isDirectory
                     ? (expandAll ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed)
                     : vscode.TreeItemCollapsibleState.None;
@@ -699,6 +710,13 @@ export class FilesExplorerProvider implements vscode.TreeDataProvider<FileItem> 
         } catch (error) {
             console.error(`Error auto-selecting files in directory ${dirPath}:`, error);
         }
+    }
+
+    // 直接收起所有目录
+    collapseAllDirectories(): void {
+        console.log('Collapsing all directories');
+        this.forceExpandAll = false;
+        this._onDidChangeTreeData.fire();
     }
 
     // 重新实现getSelectedFilesCountInDirectory方法

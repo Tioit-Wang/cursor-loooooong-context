@@ -28,6 +28,11 @@ export function activate(context: vscode.ExtensionContext) {
         }),
         vscode.commands.registerCommand('filesExporter.configureExcludePatterns', async () => {
             await configureExcludePatterns(filesExplorerProvider);
+        }),
+
+        vscode.commands.registerCommand('filesExporter.collapseAll', () => {
+            // 直接收起所有目录
+            filesExplorerProvider.collapseAllDirectories();
         })
     );
 

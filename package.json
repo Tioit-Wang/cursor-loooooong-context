@@ -44,7 +44,7 @@
       {
         "command": "filesExporter.exportSelected",
         "title": "Export Selected Files for Cursor",
-        "icon": "$(export)"
+        "icon": "$(share)"
       },
       {
         "command": "filesExporter.refreshEntry",
@@ -57,9 +57,9 @@
         "icon": "$(gear)"
       },
       {
-        "command": "filesExporter.configureExcludePatterns",
-        "title": "配置排除路径",
-        "icon": "$(filter)"
+        "command": "filesExporter.collapseAll",
+        "title": "收起所有目录",
+        "icon": "$(collapse-all)"
       },
       {
         "command": "filesExporter.refreshAfterConfiguration",
@@ -98,7 +98,7 @@
           "group": "navigation@9"
         },
         {
-          "command": "filesExporter.configureExcludePatterns",
+          "command": "filesExporter.collapseAll",
           "when": "view == filesExporterView",
           "group": "navigation@8"
         }
@@ -211,12 +211,8 @@
           "type": "boolean",
           "default": false,
           "description": "是否默认展开所有目录，默认不展开"
-        },
-        "cursorLoooooongContext.configured": {
-          "type": "boolean",
-          "default": false,
-          "description": "是否已经配置过工作区"
         }
+
       }
     }
   },
