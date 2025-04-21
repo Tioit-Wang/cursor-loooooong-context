@@ -1,5 +1,12 @@
 # Cursor Loooooong Context 更新日志
 
+## v1.1.0 (2024-05-20)
+
+### 改进
+- 🔧 移除了 `cursorLoooooongContext.configured` 配置项，简化配置
+- 🧹 清理了不必要的配置选项，提高用户体验
+- 📦 优化了扩展包大小
+
 ## v1.0.0 (2024-05-15)
 
 ### 主要更新

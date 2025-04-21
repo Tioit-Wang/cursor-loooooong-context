@@ -1,7 +1,7 @@
 {
   "name": "cursor-loooooong-context",
   "displayName": "Cursor Loooooong Context",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "突破Cursor上下文限制，智能导出代码文件为AI助手可用格式，提升开发效率",
   "publisher": "Tioit-Wang",
   "author": {
